@@ -6,9 +6,10 @@ OPEN_TARGETS = $(addprefix open-, $(NOTES))
 help: URL := github.com/drdv/makefile-doc/releases/latest/download/makefile-doc.awk
 help: DIR := $(HOME)/.local/share/makefile-doc
 help: SCR := $(DIR)/makefile-doc.awk
+help: VFLAG := -v EXPANDED_TARGETS='$$(OPEN_TARGETS):open-:$(NOTES)'
 help: ## Show this help
 	@test -f $(SCR) || wget -q -P $(DIR) $(URL)
-	@awk -f $(SCR) $(MAKEFILE_LIST)
+	@awk $(VFLAG) -f $(SCR) $(MAKEFILE_LIST)
 
 ## Generate all notes
 all: $(addsuffix .pdf, $(NOTES))
@@ -16,7 +17,7 @@ all: $(addsuffix .pdf, $(NOTES))
 %.pdf: %.tex
 	@$(LATEX_PROCESSOR) $<
 
-## To open note1.pdf, use: make open-note1
+##
 $(OPEN_TARGETS): open-%: %.pdf
 	@xdg-open $< &
 
