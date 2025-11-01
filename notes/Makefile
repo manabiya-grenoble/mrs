@@ -6,7 +6,7 @@ OPEN_TARGETS = $(addprefix open-, $(NOTES))
 help: URL := github.com/drdv/makefile-doc/releases/latest/download/makefile-doc.awk
 help: DIR := $(HOME)/.local/share/makefile-doc
 help: SCR := $(DIR)/makefile-doc.awk
-help: VFLAG := -v EXPANDED_TARGETS='$$(OPEN_TARGETS):open-:$(NOTES)'
+help: VFLAG := -v SUB='$$(OPEN_TARGETS):open-:$(NOTES)'
 help: ## Show this help
 	@test -f $(SCR) || wget -q -P $(DIR) $(URL)
 	@awk $(VFLAG) -f $(SCR) $(MAKEFILE_LIST)
