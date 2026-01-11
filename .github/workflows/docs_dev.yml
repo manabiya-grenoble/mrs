@@ -2,6 +2,7 @@ name: Deploy Web Preview
 on:
   push:
     branches:
+      - 'dev-*'
       - 'docs'
 
 permissions:
@@ -19,10 +20,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
+      - uses: wtfjoke/setup-tectonic@v4
+      - name: Install ubuntu deps
+        run: sudo apt-get install -y pdf2svg
 
       - run: |
           pip install zensical
-          # FIXME: generate figures
           zensical build --clean
 
       - run: |
