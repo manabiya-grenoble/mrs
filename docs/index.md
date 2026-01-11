@@ -1,1 +1,2 @@
-# MRS
+# Meetup robotic simulator
+

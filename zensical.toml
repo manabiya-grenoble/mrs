@@ -1,14 +1,15 @@
 [project]
-site_name = "MRS"
+site_name = "Meetup robotic simulator"
 site_description = "Meetup robotic simulator."
-site_author = "Meetup members"
+site_author = "All members"
 site_url = "https://github.com/manabiya-fr"
 repo_url = "https://github.com/manabiya-fr/mrs"
 copyright = """&copy; 2025 MRS"""
 
-# nav = [
-#   ,
-# ]
+extra_javascript = [
+    "javascripts/mathjax.js",
+    "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"
+]
 
 # ----------------------------------------------------------------------------
 # Section for configuring theme options

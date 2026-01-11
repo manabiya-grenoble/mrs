@@ -1,4 +1,4 @@
-DEPS = zensical
+DEPS =
 VFLAGS =
 
 MAKEFLAGS := --no-print-directory --warn-undefined-variables --no-builtin-rules
