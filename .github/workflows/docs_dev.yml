@@ -1,0 +1,36 @@
+name: Deploy Web Preview
+on:
+  push:
+    branches:
+      - 'docs'
+
+permissions:
+  contents: write
+
+env:
+  DEV_PAGES_BRANCH: gh-pages-dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+
+      - run: |
+          pip install zensical
+          zensical build --clean
+
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git branch -D $DEV_PAGES_BRANCH || true
+          git checkout --orphan $DEV_PAGES_BRANCH
+          git reset --hard
+          cp -r site/* .
+          git add .
+          git commit -m "Deploy web preview from ${{ github.ref_name }}"
+          git push --force origin $DEV_PAGES_BRANCH
