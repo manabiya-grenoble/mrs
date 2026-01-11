@@ -22,6 +22,7 @@ jobs:
 
       - run: |
           pip install zensical
+          # FIXME: generate figures
           zensical build --clean
 
       - run: |
