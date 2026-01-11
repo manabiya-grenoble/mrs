@@ -11,6 +11,13 @@ extra_javascript = [
     "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js"
 ]
 
+nav = [
+  { "Home" = "index.md" },
+  { "Notes" = [
+  { "Gauss' principle" = "gauss_principle.md" },
+  { "Figures" = "example_figure.md" }
+  ]}
+]
 # ----------------------------------------------------------------------------
 # Section for configuring theme options
 # ----------------------------------------------------------------------------
