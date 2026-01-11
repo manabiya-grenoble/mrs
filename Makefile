@@ -1,4 +1,4 @@
-include Makefile.inc
+include make/Makefile.inc
 
 ZENSICAL := zensical
 
