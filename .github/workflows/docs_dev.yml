@@ -5,9 +5,6 @@ on:
       - 'dev-*'
       - 'docs'
 
-permissions:
-  contents: write
-
 env:
   DEV_PAGES_BRANCH: gh-pages-dev
 
@@ -15,26 +12,56 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: 3.x
-      - uses: wtfjoke/setup-tectonic@v4
-      - name: Install ubuntu deps
-        run: sudo apt-get install -y pdf2svg
+          cache: 'pip'
 
-      - run: |
-          pip install zensical
+      - name: Setup TeX Live (XeLaTeX + PGF support)
+        uses: TeX-Live/setup-texlive-action@v3
+        with:
+          packages: |
+            scheme-basic
+            xetex
+            pgf
+            fontspec
+            unicode-math
+            lmodern
+            cm-super
+            xcolor
+            graphics
+            tools
+            underscore
+            type1cm
+            standalone
+            tikz
+          cache: true
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pdf2svg
+
+      - name: Build site
+        run: |
+          pip install zensical uv
+          make generate-figures
           zensical build --clean
 
-      - run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git branch -D $DEV_PAGES_BRANCH || true
-          git checkout --orphan $DEV_PAGES_BRANCH
-          git reset --hard
-          cp -r site/* .
-          git add .
-          git commit -m "Deploy web preview from ${{ github.ref_name }}"
-          git push --force origin $DEV_PAGES_BRANCH
+      - name: Deploy to gh-pages-dev
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: ${{ env.DEV_PAGES_BRANCH }}
+          force_orphan: true
+          commit_message: |
+            Deploy web preview from ${{ github.ref_name }}
+            ${{ github.event.head_commit.message }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
