@@ -12,8 +12,8 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.x'
           cache: 'pip'
@@ -49,7 +49,7 @@ jobs:
           make generate-figures
           zensical build --clean
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: built-site
           path: site/
@@ -62,8 +62,8 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v7
         with:
           name: built-site
           path: site/
