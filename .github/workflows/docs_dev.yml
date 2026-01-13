@@ -1,28 +1,24 @@
-name: Deploy Web Preview
+name: Dev website
+
 on:
   push:
     branches:
       - 'dev-*'
-      - 'docs'
-
-env:
-  DEV_PAGES_BRANCH: gh-pages-dev
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
+          python-version: '3.x'
           cache: 'pip'
 
-      - name: Setup TeX Live (XeLaTeX + PGF support)
+      - name: Setup TeX Live (xelatex + PGF support)
         uses: TeX-Live/setup-texlive-action@v3
         with:
           packages: |
@@ -42,26 +38,43 @@ jobs:
             tikz
           cache: true
 
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y pdf2svg
+          pip install zensical uv
 
       - name: Build site
         run: |
-          pip install zensical uv
           make generate-figures
           zensical build --clean
 
-      - name: Deploy to gh-pages-dev
+      - uses: actions/upload-artifact@v4
+        with:
+          name: built-site
+          path: site/
+          retention-days: 1
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: built-site
+          path: site/
+
+      - name: Deploy for Cloudflare
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
-          publish_branch: ${{ env.DEV_PAGES_BRANCH }}
+          publish_branch: gh-pages-dev
           force_orphan: true
           commit_message: |
             Deploy web preview from ${{ github.ref_name }}
             ${{ github.event.head_commit.message }}
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
