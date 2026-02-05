@@ -2,7 +2,7 @@
 site_name = "Meetup robotic simulator"
 site_description = "Meetup robotic simulator."
 site_author = "All members"
-site_url = "https://github.com/manabiya-fr"
+site_url = "https://mrs-docs.pages.dev/"
 repo_url = "https://github.com/manabiya-fr/mrs"
 copyright = """&copy; 2025 MRS"""
 
